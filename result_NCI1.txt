@@ -1,0 +1,6 @@
+Batch size: 4110. Learning rate: 0.01. Hidden dim: 300. Dropout net: 0.5. Dropout graph: 0.5 
+The Best val accuracy is 0.8316301703163017, the std is 0.02044696566313953, the seed is 18.  
+Batch size: 4110. Learning rate: 0.01. Hidden dim: 16. Dropout net: 0.5. Dropout graph: 0.5 
+The Best val accuracy is 0.8328467153284672, the std is 0.01094439845973669, the seed is 14.   
+Batch size: 4110. Learning rate: 0.01. Hidden dim: 16. Dropout net: 0.5. Dropout graph: 0.5 
+The Best val accuracy is 0.8321167883211679, the std is 0.012511961573837382, the seed is 1.  
