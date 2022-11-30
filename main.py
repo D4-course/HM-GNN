@@ -197,8 +197,8 @@ def main():
     
     max_val = 0
     best_seed = 14
-    for step in range(50):
-        seed=109
+    for step in range(1):
+        seed=69
         val_acc = []
         random.seed(seed)
         np.random.seed(seed)
@@ -210,7 +210,7 @@ def main():
             torch.backends.cudnn.deterministic = True
         train_idx, valid_idx = sep_data(labels[:number_of_graphs], seed)
         print(valid_idx)
-        for i in range(10):
+        for i in range(1):
             train_index = train_idx[i]
             valid_index = valid_idx[i]
             train_mask = [True if x in train_index else False for x in range(int(g.num_nodes()))]
@@ -249,6 +249,10 @@ def main():
             )
 
             gin = TwoGIN(args.l_num, 2, in_feats, graphs[0].node_features.shape[1], args.h_dim, 2, args.drop_n, args.drop_c, args.learn_eps, 'sum', 'sum').to(device)
+            try:
+                gin.load_state_dict(torch.load(f'./saved_model/best_{args.data}.pt'))
+            except:
+                print('Training for the first time')
             loss_fcn = torch.nn.CrossEntropyLoss()
             optimizer = torch.optim.Adam(gin.parameters(), lr=args.lr, weight_decay=args.w_d)
             acc_mx = 0.0
@@ -257,6 +261,7 @@ def main():
                 train_acc, acc = train_and_evaluate(args, gin, num_cliques, loss_fcn, node_features, labels, graphs, dataloader, val_dataloader, edge_weight, optimizer, device)
                 final_acc = train_acc
                 if acc > acc_mx:
+                    torch.save(gin.state_dict(), f'./saved_model/best_{args.data}.pt')
                     acc_mx = acc
                     train_mx = train_acc
                 if optimizer.param_groups[0]['lr'] < args.min_lr:
@@ -268,10 +273,8 @@ def main():
             max_val = average(val_acc)
             best_seed = seed
         print(f"The total val accuracy of model with seed {seed} is {average(val_acc)}")
-        print(f"Standard Deviation of model is {st.stdev(val_acc)}")
         f = open(f"result_{args.data}.txt", "a")
         f.write(f'Batch size: {args.batch_size}. Learning rate: {args.lr}. Hidden dim: {args.h_dim}. Dropout net: {args.drop_n}. Dropout graph: {args.drop_c} \n')
-        f.write(f"The Best val accuracy is {average(val_acc)}, the std is {st.stdev(val_acc)}, the seed is {seed}.  \n")
         f.close()
     print(f'Best val acc is {max_val}, best seed is {best_seed}.')
 

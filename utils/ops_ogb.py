@@ -105,9 +105,9 @@ def load_data(dataset, degree_as_tag):
 
 
     print('# classes: %d' % len(label_dict))
-    print('# maximum node tag: %d' % len(tagset))
+    # print('# maximum node tag: %d' % len(tagset))
 
-    print("# data: %d" % len(g_list))
+    # print("# data: %d" % len(g_list))
 
     return g_list, len(label_dict)
 
